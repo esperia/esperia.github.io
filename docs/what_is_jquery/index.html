@@ -1,0 +1,284 @@
+<!doctype html>
+<html>
+
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+        <title>jQueryについて</title>
+
+        <link rel="stylesheet" href="css/reveal.css">
+        <link rel="stylesheet" href="css/theme/black.css">
+        <style>
+            .reveal h1, .reveal h2, .reveal h3, .reveal h4, .reveal h5, .reveal h6 {
+                text-transform: none;
+            }
+        </style>
+
+        <!-- Theme used for syntax highlighting of code -->
+        <link rel="stylesheet" href="lib/css/zenburn.css">
+
+        <!-- Printing and PDF exports -->
+        <script>
+            var link = document.createElement('link');
+            link.rel = 'stylesheet';
+            link.type = 'text/css';
+            link.href = window.location.search.match(/print-pdf/gi) ? 'css/print/pdf.css' : 'css/print/paper.css';
+            document.getElementsByTagName('head')[0].appendChild(link);
+        </script>
+
+        <!-- jQuery -->
+        <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    </head>
+
+    <body>
+        <div class="reveal">
+            <div class="slides">
+                <section>
+                    <h1>jQueryについて</h1>
+                </section>
+                <section>
+                    <p>その前に…</p>
+                </section>
+
+
+
+                <section>
+                    <h1>HTMLのおさらい</h1>
+                </section>
+                <section>
+                    <h1>HTML is 何？</h1>
+                    <p class="fragment">Webページの「構造」を決める、文法のこと</p>
+                </section>
+                <section>
+                    <h2>基本</h2>
+                    <pre><code class="hlhtml" data-trim contenteditable>
+                        &lt;!DOCTYPE html&gt;
+                        &lt;html lang=&quot;ja&quot;&gt;
+                            &lt;head&gt;
+                                &lt;meta charset=&quot;UTF-8&quot;&gt;
+                                &lt;title&gt;タイトル&lt;/title&gt;
+                                &lt;-- ここに要素を書く --&gt;
+                            &lt;/head&gt;
+                            &lt;body&gt;
+                                &lt;-- ここに要素を書く --&gt;
+                            &lt;/body&gt;
+                        &lt;/html&gt;
+                    </code></pre>
+                    <p>
+                        例えば、
+                        <code>&lt;html&gt;</code>
+                        <code>&lt;/html&gt;</code>
+                        で囲まれた中に、
+                        <code>&lt;body&gt;</code>
+                        <code>&lt;/body&gt;</code>
+                        がある。これが「構造」
+                    </p>
+                    <p>これを基本として、後は自由に変更していく</p>
+                </section>
+                <section>
+                    <h2>DOCTYPE宣言</h2>
+                    <pre><code class="hlhtml" data-trim contenteditable>
+                        &lt;!DOCTYPE html&gt;
+                    </code></pre>
+                    <ul>
+                        <li>どんなファイルなのかをブラウザに教えるもの</li>
+                        <li>一番先頭に書かなければならない</li>
+                    </ul>
+                </section>
+                <section>
+                    <pre><code class="hlhtml" data-trim contenteditable>
+                        &lt;!-- HTML5 --&gt;
+                        &lt;!DOCTYPE html&gt;
+
+                        &lt;!-- HTML 4.01 Transitional --&gt;
+                        &lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.01 Transitional//EN&quot; &quot;http://www.w3.org/TR/html4/loose.dtd&quot;&gt;
+
+                        &lt;!-- XHTML 1.0 Transitional --&gt;
+                        &lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD XHTML 1.0 Strict//EN&quot; &quot;http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd&quot;&gt;
+                    </code></pre>
+                    <ul>
+                        <li><a href="https://www.w3.org/QA/2002/04/valid-dtd-list.html">いろいろある</a></li>
+                        <li>でも、HTML5の書き方以外覚える必要はない</li>
+                    </ul>
+                </section>
+                <section>
+                    <h2>head要素</h2>
+                    <pre><code class="hlhtml" data-trim contenteditable>
+                        &lt;head&gt;
+                    </code></pre>
+                    <ul>
+                        <li>中に、ページのメタ情報(付加情報)を表す要素が入る</li>
+                        <li>画面に表示しないものを入れる。 &lt;title&gt; 等</li>
+                    </ul>
+                </section>
+                <section>
+                    <h2>body要素</h2>
+                    <pre><code class="hlhtml" data-trim contenteditable>
+                        &lt;body&gt;
+                    </code></pre>
+                    <ul>
+                        <li>中に、ページのコンテンツが入る</li>
+                        <li>画面に表示するものを入れる。 &lt;p&gt; 等</li>
+                    </ul>
+                </section>
+
+
+
+                <section>
+                    <h1>HTMLの"要素"について</h1>
+                </section>
+                <section>
+                    <img src="images/tag_none.png" alt="">
+                </section>
+                <section>
+                    <img src="images/tag_explain.png" alt="">
+                </section>
+                <section>
+                    <p>完</p>
+                </section>
+
+
+
+                <section>
+                    <h1>JavaScriptからHTMLを変更する</h1>
+                </section>
+                <section>
+                    <h2>Webブラウザには、JavaScriptを使って、好きなタイミングで自由にHTMLを変更することのできる仕組みがある</h2>
+                </section>
+                <section>
+                    <h2>例: 増やす</h2>
+                    <div id="js-add-click">ここをクリック！！</div>
+                    <div id="js-add"></div>
+                    <pre><code class="hlhtml" data-trim contenteditable>
+                        &lt;div id=&quot;js-add-click&quot;&gt;ここをクリック！！&lt;/div&gt;
+                        &lt;div id=&quot;js-add&quot;&gt;&lt;/div&gt;
+                    </code></pre>
+                    <pre><code class="hljs" data-trim contenteditable>
+                        var i = 0;
+                        // 「ここをクリック！！」の要素を取得
+                        var clickEl = document.getElementById('js-add-click');
+                        clickEl.addEventListener('click', function(e) {
+                            // spanの要素を作成
+                            var newEl = document.createElement('span');
+                            newEl.textContent = 'test' + i++;
+
+                            // あらかじめ定義していたdiv要素へ、先程のspan要素を追加
+                            var containerEl = document.getElementById('js-add');
+                            containerEl.appendChild(newEl)
+                        }, false);
+                    </code></pre>
+                </section>
+                <section>
+                    <ul>
+                        <li>めっちゃ書くの面倒くさい</li>
+                        <li>覚えにくい</li>
+                        <li><strong>モノによっては、ブラウザによって挙動が違う場合がある</strong></li>
+                    </ul>
+                </section>
+                <section>
+                    <p>これを解決してくれるのが…</p>
+                </section>
+
+                <section>
+                    <h1>jQuery</h1>
+                </section>
+                <section>
+                    <h2>jQueryとは</h2>
+                    <ul>
+                        <li>HTMLをJavaScriptを簡単に触れるようにしてくれるモノ(ライブラリ)</li>
+                        <li>他にも、ブラウザ間でのプログラムの違いをなくしてくれる</li>
+                    </ul>
+                </section>
+                <section>
+                    <h2>さっきのプログラム</h2>
+                    <pre><code class="hljs" data-trim contenteditable>
+                        var i = 0;
+                        // 「ここをクリック！！」の要素を取得
+                        var clickEl = document.getElementById('js-add-click');
+                        clickEl.addEventListener('click', function(e) {
+                            // spanの要素を作成
+                            var newEl = document.createElement('span');
+                            newEl.textContent = 'test' + i++;
+
+                            // あらかじめ定義していたdiv要素へ、先程のspan要素を追加
+                            var containerEl = document.getElementById('js-add');
+                            containerEl.appendChild(newEl)
+                        }, false);
+                    </code></pre>
+                </section>
+                <section>
+                    <h2>jQueryではこう書ける</h2>
+                    <div id="js-add-click-jq">ここをクリック！！</div>
+                    <div id="js-add-jq"></div>
+                    <pre><code class="hljs" data-trim contenteditable>
+                        var i = 0;
+                        // 「ここをクリック！！」の要素を取得
+                        var $click = $('#js-add-click-jq');
+                        $click.on('click', function(e) {
+                            // spanの要素を作成し、
+                            // あらかじめ定義していたdiv要素へ、先程のspan要素を追加
+                            var $new = $('&lt;span&gt;').text('test' + i++).appendTo( $('#js-add-jq') );
+                        });
+                    </code></pre>
+                </section>
+                <section>
+                    <h2>参考資料</h2>
+                    <ul>
+                        <li><a href="http://html5.jp/tag/elements/index.html">HTML要素の一覧</a></li>
+                        <li><a href="http://www.kanzaki.com/docs/html/lesson1.html">30分間HTML入門</a></li>
+                    </ul>
+                </section>
+
+
+
+            </div>
+        </div>
+
+        <script src="lib/js/head.min.js"></script>
+        <script src="js/reveal.js"></script>
+
+        <script>
+            // More info about config & dependencies:
+        // - https://github.com/hakimel/reveal.js#configuration
+        // - https://github.com/hakimel/reveal.js#dependencies
+        Reveal.initialize({
+            dependencies: [
+                { src: 'plugin/markdown/marked.js' },
+                { src: 'plugin/markdown/markdown.js' },
+                { src: 'plugin/notes/notes.js', async: true },
+                { src: 'plugin/highlight/highlight.js', async: true, callback: function () { hljs.initHighlightingOnLoad(); } }
+            ]
+        });
+        Reveal.addEventListener( 'ready', function( event ) {
+            // event.currentSlide, event.indexh, event.indexv
+            (function() {
+                var i = 0;
+                // 「ここをクリック！！」の要素を取得
+                var clickEl = document.getElementById('js-add-click');
+                clickEl.addEventListener('click', function(e) {
+                    // spanの要素を作成
+                    var newEl = document.createElement('span');
+                    newEl.textContent = 'test' + i++;
+
+                    // あらかじめ定義していたdiv要素へ、先程のspan要素を追加
+                    var containerEl = document.getElementById('js-add');
+                    containerEl.appendChild(newEl)
+                }, false);
+            })();
+            (function() {
+                var i = 0;
+                // 「ここをクリック！！」の要素を取得
+                var $click = $('#js-add-click-jq');
+                $click.on('click', function(e) {
+                    // spanの要素を作成し、
+                    // あらかじめ定義していたdiv要素へ、先程のspan要素を追加
+                    var $new = $('<span>').text('test' + i++);
+                    $new.appendTo( $('#js-add-jq') );
+                });
+            })()
+        });
+        </script>
+    </body>
+
+</html>
