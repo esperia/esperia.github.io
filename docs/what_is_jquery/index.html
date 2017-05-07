@@ -48,7 +48,7 @@
                 </section>
                 <section>
                     <h1>HTML is 何？</h1>
-                    <p class="fragment">Webページの「構造」を決める、文法のこと</p>
+                    <p class="fragment">Webページの「構造」を決める、形式のこと</p>
                 </section>
                 <section>
                     <h2>基本</h2>
@@ -192,6 +192,10 @@
                 </section>
                 <section>
                     <h2>さっきのプログラム</h2>
+                    <pre><code class="hlhtml" data-trim contenteditable>
+                        &lt;div id=&quot;js-add-click&quot;&gt;ここをクリック！！&lt;/div&gt;
+                        &lt;div id=&quot;js-add&quot;&gt;&lt;/div&gt;
+                    </code></pre>
                     <pre><code class="hljs" data-trim contenteditable>
                         var i = 0;
                         // 「ここをクリック！！」の要素を取得
@@ -211,14 +215,18 @@
                     <h2>jQueryではこう書ける</h2>
                     <div id="js-add-click-jq">ここをクリック！！</div>
                     <div id="js-add-jq"></div>
+                    <pre><code class="hlhtml" data-trim contenteditable>
+                        &lt;div id=&quot;js-add-click&quot;&gt;ここをクリック！！&lt;/div&gt;
+                        &lt;div id=&quot;js-add&quot;&gt;&lt;/div&gt;
+                    </code></pre>
                     <pre><code class="hljs" data-trim contenteditable>
                         var i = 0;
                         // 「ここをクリック！！」の要素を取得
-                        var $click = $('#js-add-click-jq');
+                        var $click = $('#js-add-click');
                         $click.on('click', function(e) {
                             // spanの要素を作成し、
                             // あらかじめ定義していたdiv要素へ、先程のspan要素を追加
-                            var $new = $('&lt;span&gt;').text('test' + i++).appendTo( $('#js-add-jq') );
+                            var $new = $('&lt;span&gt;').text('test' + i++).appendTo( $('#js-add') );
                         });
                     </code></pre>
                 </section>

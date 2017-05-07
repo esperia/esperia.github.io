@@ -55,11 +55,18 @@
         });
 
         var i = 0;
+        // <ul id="list">...</ul> という要素を取り出す
         var $list = $('#list');
+        // <button id="create-list">クリックしてメニューを追加</button> という要素をクリックした時の
+        // 関数を設定する
         $('#create-list').on('click', function(e) {
+            // <li> 要素を作る
             var $newLi = $('<li>');
+
             i += 1;
+            // <li> 要素の中身を決める
             $newLi.text('メニュー' + i);
+            // <ul id="list"></ul> の中に、作成した <li> 要素を追加する
             $newLi.appendTo($list);
         });
 
@@ -73,6 +80,16 @@
             "メニュー１",
             "メニュー２",
         ];
+        var $listOl = $('#list-ol');
+        for (var i = 0; i < menus.length; i++) {
+            var $newLi = $('<li>');
+
+            // <li> 要素の中身を決める
+            $newLi.text(menus[i]);
+            // <ul id="list"></ul> の中に、作成した <li> 要素を追加する
+            $newLi.appendTo($listOl);
+        }
+        
         // TODO: ここにプログラムを書く
     </script>
 </body>
