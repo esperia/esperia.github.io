@@ -1,12 +1,13 @@
 import Link from 'next/link'
+import Layout from '../components/Layout'
 
 const Home = () => (
-    <div>
-        <h1>Tests</h1>
-        <ul>
-            <li><Link href='/tests' as={process.env.BACKEND_URL + '/tests'}><a>About</a></Link></li>
-        </ul>
-    </div>
+  <Layout>
+    <h1>Tests</h1>
+    <ul>
+      <li><Link href='/tests/webgl/example' as={process.env.BACKEND_URL + '/tests/webgl/example'}><a>WebGL</a></Link></li>
+    </ul>
+  </Layout>
 )
 
 export default Home
