@@ -1,6 +1,18 @@
+# esperia.github.io
+## Setup
 
-My Pages
-====================
+```sh
+npm install
+npm run dev
+```
+
+## Deploy
+
+```sh
+npm run deploy
+```
+
+
 
 
 
