@@ -1,28 +1,47 @@
 import React from 'react'
-import Link from 'next/link'
 import { MatIV } from '../../../../libs/minMatrix';
+import { CanvasComponent } from '../components';
 
+const vsAttributes = {
+  position: 'position',
+  color: 'color',
+  mvpMatrix: 'mvpMatrix',
+}
+const varyings = {
+  vColor: 'vColor',
+}
 const vsSource = `
-attribute vec3 position;
-uniform   mat4 mvpMatrix;
+attribute vec3 ${vsAttributes.position};
+attribute vec4 ${vsAttributes.color};
+uniform   mat4 ${vsAttributes.mvpMatrix};
+varying   vec4 ${varyings.vColor};
 
 void main(void) {
-  gl_Position = mvpMatrix * vec4(position, 1.0);
+  vColor = color;
+  gl_Position = mvpMatrix * vec4(${vsAttributes.position}, 1.0);
 }
 `
 const fsSource = `
+precision mediump float;
+varying   vec4 ${varyings.vColor};
+
 void main(void) {
-  gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
+  gl_FragColor = ${varyings.vColor};
 }
 `
 
 class W014 {
+  private gl: WebGLRenderingContext;
   private canvasWidth = 300;
   private canvasHeight = 300;
 
   constructor(
-    private gl: WebGLRenderingContext
-  ) {}
+    canvasEl: HTMLCanvasElement,
+  ) {
+    this.gl = canvasEl.getContext('webgl') as WebGLRenderingContext
+    this.canvasWidth = canvasEl.width
+    this.canvasHeight = canvasEl.height
+  }
 
   run() {
     const gl = this.gl;
@@ -34,18 +53,33 @@ class W014 {
       const fShader = this.createShader(this.gl.createShader(this.gl.FRAGMENT_SHADER)!, fsSource);
       const program = this.createProgram(vShader, fShader);
       this.gl.useProgram(program);
-      const attLocation = this.gl.getAttribLocation(program, 'position')
-      const attStride = 3
+
+      const vertexPositionAttribLocation = this.gl.getAttribLocation(program, vsAttributes.position)
+      const vertexColorAttribLocation = this.gl.getAttribLocation(program, vsAttributes.color)
+
+      const vertexPositionStride = 3
       const vertexPosition = [
           0.0, 1.0, 0.0,
           1.0, 0.0, 0.0,
           -1.0,0.0, 0.0,
       ]
+      const vertexColorStride = 4
+      const vertexColor = [
+          1.0, 0.0, 0.0, 1.0,
+          0.0, 1.0, 0.0, 1.0,
+          0.0, 0.0, 1.0, 1.0
+      ];
 
-      const vbo = this.createVbo(vertexPosition)
-      this.gl.bindBuffer(this.gl.ARRAY_BUFFER, vbo)
-      this.gl.enableVertexAttribArray(attLocation)
-      this.gl.vertexAttribPointer(attLocation, attStride, this.gl.FLOAT, false, 0, 0)
+      const vertexPositionVbo = this.createVbo(vertexPosition)
+      const vertexColorVbo = this.createVbo(vertexColor)
+
+      this.gl.bindBuffer(this.gl.ARRAY_BUFFER, vertexPositionVbo)
+      this.gl.enableVertexAttribArray(vertexPositionAttribLocation)
+      this.gl.vertexAttribPointer(vertexPositionAttribLocation, vertexPositionStride, this.gl.FLOAT, false, 0, 0)
+
+      this.gl.bindBuffer(this.gl.ARRAY_BUFFER, vertexColorVbo)
+      this.gl.enableVertexAttribArray(vertexColorAttribLocation)
+      this.gl.vertexAttribPointer(vertexColorAttribLocation, vertexColorStride, this.gl.FLOAT, false, 0, 0)
 
       const m = new MatIV();
       const mMatrix = m.create()
@@ -63,7 +97,7 @@ class W014 {
       m.multiply(pMatrix, vMatrix, mvpMatrix)
       m.multiply(mvpMatrix, mMatrix, mvpMatrix)
 
-      const uniLocation = this.gl.getUniformLocation(program, 'mvpMatrix')
+      const uniLocation = this.gl.getUniformLocation(program, vsAttributes.mvpMatrix)
       this.gl.uniformMatrix4fv(uniLocation, false, mvpMatrix)
       this.gl.drawArrays(this.gl.TRIANGLES, 0, 3)
       this.gl.flush()
@@ -100,35 +134,14 @@ class W014 {
   }
 }
 
-
-class Canvas extends React.Component {
-  private canvasRef: React.RefObject<HTMLCanvasElement>
-
-  constructor(props: any) {
-    super(props)
-    this.canvasRef = React.createRef();
+export default () => {
+  const onMountedCanvas = (canvasEl: HTMLCanvasElement) => {
+    new W014(canvasEl).run();
   }
-
-  componentDidMount() {
-    const canvasEl = this.canvasRef.current
-    if (canvasEl) {
-      console.log(this.canvasRef.current)
-      canvasEl.width = 300
-      canvasEl.height = 300
-
-      const webGLContext = canvasEl.getContext('webgl') as WebGLRenderingContext
-      new W014(webGLContext).run();
-    }
-  }
-
-  render() {
-    return <canvas ref={this.canvasRef}></canvas>
-  }
+  return (
+    <div>
+      <h1>Test</h1>
+      <CanvasComponent onMountedCanvas={canvasEl => onMountedCanvas(canvasEl)} />
+    </div>
+  )
 }
-
-export default () => (
-  <div>
-    <h1>Test</h1>
-    <Canvas />
-  </div>
-)
