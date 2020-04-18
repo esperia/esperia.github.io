@@ -21,8 +21,6 @@ export class CanvasComponent extends React.Component<{
       if (this.props.onMountedCanvas) {
         this.props.onMountedCanvas(canvasEl)
       }
-      // const webGLContext = canvasEl.getContext('webgl') as WebGLRenderingContext
-      // new W014(webGLContext).run();
     }
   }
 

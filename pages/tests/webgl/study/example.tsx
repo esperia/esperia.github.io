@@ -30,7 +30,7 @@ void main(void) {
 }
 `
 
-class W014 {
+class W015 {
   private gl: WebGLRenderingContext;
   private canvasWidth = 300;
   private canvasHeight = 300;
@@ -136,7 +136,7 @@ class W014 {
 
 export default () => {
   const onMountedCanvas = (canvasEl: HTMLCanvasElement) => {
-    new W014(canvasEl).run();
+    new W015(canvasEl).run();
   }
   return (
     <div>

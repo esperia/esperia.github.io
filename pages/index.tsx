@@ -8,7 +8,7 @@ const Home = () => (
       <li>
         <span><a href="https://wgld.org/">wgld</a> Example</span>
         <ul>
-          <li><Link href='/tests/webgl/study/w014' as={process.env.BACKEND_URL + '/tests/webgl/study/w014'}><a>W014</a></Link></li>
+          <li><Link href='/tests/webgl/study/example' as={process.env.BACKEND_URL + '/tests/webgl/study/example'}><a>example</a></Link></li>
         </ul>
       </li>
     </ul>
