@@ -3,6 +3,7 @@ import React from 'react'
 
 export class CanvasComponent extends React.Component<{
   onMountedCanvas?: (canvasEl: HTMLCanvasElement) => void,
+  onUnmountedCanvas?: () => void,
 }> {
   private canvasRef: React.RefObject<HTMLCanvasElement>
 
@@ -24,7 +25,13 @@ export class CanvasComponent extends React.Component<{
     }
   }
 
+  componentWillUnmount() {
+    if (this.props.onUnmountedCanvas) {
+      this.props.onUnmountedCanvas()
+    }
+  }
+
   render() {
-    return <canvas ref={this.canvasRef}></canvas>
+    return <canvas ref={this.canvasRef} />
   }
 }
