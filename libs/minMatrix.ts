@@ -1,19 +1,33 @@
-// ------------------------------------------------------------------------------------------------
-// minMatrix.js
-// version 0.0.1
-// Copyright (c) doxas
-// ------------------------------------------------------------------------------------------------
-
+/**
+ * minMatrix.js
+ * version 0.0.1
+ * Copyright (c) doxas
+ * 
+ * @see "https://wgld.org/d/library/l001.html"
+ */
 export class MatIV {
+  /**
+   * 4 x 4 の正方行列を生成します。実態としては単なる一次元配列で、16 個の要素を持ちます。先述の通り、型付配列のFloat32Arrayを利用します。
+   */
   create() {
     return new Float32Array(16);
   }
+  /**
+   * 行列を単位化します。
+   * @param dest 単位化する行列
+   */
   identity(dest: Float32Array) {
     dest[0]  = 1; dest[1]  = 0; dest[2]  = 0; dest[3]  = 0;
     dest[4]  = 0; dest[5]  = 1; dest[6]  = 0; dest[7]  = 0;
     dest[8]  = 0; dest[9]  = 0; dest[10] = 1; dest[11] = 0;
     dest[12] = 0; dest[13] = 0; dest[14] = 0; dest[15] = 1;
   }
+  /**
+   * 行列を掛け合わせます。
+   * @param mat1 掛け合わせの対象となる行列
+   * @param mat2 掛け合わせられる行列
+   * @param dest 演算結果を格納する行列
+   */
   multiply(mat1: Float32Array, mat2: Float32Array, dest: Float32Array) {
     var a = mat1[0],  b = mat1[1],  c = mat1[2],  d = mat1[3],
       e = mat1[4],  f = mat1[5],  g = mat1[6],  h = mat1[7],
@@ -40,6 +54,12 @@ export class MatIV {
     dest[14] = M * c + N * g + O * k + P * o;
     dest[15] = M * d + N * h + O * l + P * p;
   }
+  /**
+   * 行列にスケーリングを適用します。スケーリング係数には三つの要素を持つベクトルを配列として渡します。
+   * @param mat 演算の対象となる行列
+   * @param vec スケーリング係数となるベクトル
+   * @param dest 演算結果を格納する行列
+   */
   scale(mat: Float32Array, vec: number[], dest: Float32Array) {
     dest[0]  = mat[0]  * vec[0];
     dest[1]  = mat[1]  * vec[0];
@@ -58,6 +78,12 @@ export class MatIV {
     dest[14] = mat[14];
     dest[15] = mat[15];
   }
+  /**
+   * 行列に平行移動を適用します。三次元空間上の移動量を表す、三つの要素を持つベクトルを配列として渡します。
+   * @param mat 演算の対象となる行列
+   * @param vec 移動量を表すベクトル
+   * @param dest 演算結果を格納する行列
+   */
   translate(mat: Float32Array, vec: number[], dest: Float32Array) {
     dest[0] = mat[0]; dest[1] = mat[1]; dest[2]  = mat[2];  dest[3]  = mat[3];
     dest[4] = mat[4]; dest[5] = mat[5]; dest[6]  = mat[6];  dest[7]  = mat[7];
@@ -67,6 +93,13 @@ export class MatIV {
     dest[14] = mat[2] * vec[0] + mat[6] * vec[1] + mat[10] * vec[2] + mat[14];
     dest[15] = mat[3] * vec[0] + mat[7] * vec[1] + mat[11] * vec[2] + mat[15];
   }
+  /**
+   * 行列に回転を適用します。回転する角度をラジアンで、回転軸を三つの要素を持つベクトルで、それぞれ引数に渡します。
+   * @param mat 掛け合わせの対象となる行列
+   * @param angle 回転する角度(ラジアン単位)
+   * @param axis 回転軸を表すベクトル
+   * @param dest 演算結果を格納する行列
+   */
   rotate(mat: Float32Array, angle: number, axis: number[], dest: Float32Array) {
     var sq = Math.sqrt(axis[0] * axis[0] + axis[1] * axis[1] + axis[2] * axis[2]);
     if(!sq){return null;}
@@ -106,6 +139,13 @@ export class MatIV {
     dest[10] = i * y + m * z + q * A;
     dest[11] = j * y + n * z + r * A;
   }
+  /**
+   * ビュー座標変換行列を生成します。視点(カメラ)の位置、注視点、上方向をそれぞれ三つの要素を持つベクトルとして渡します。
+   * @param eye 視点(カメラ)の位置を表すベクトル
+   * @param center 注視点の位置を表すベクトル
+   * @param up 視点(カメラ)の上方向を表すベクトル
+   * @param dest 演算結果を格納する行列
+   */
   lookAt(eye: number[], center: number[], up: number[], dest: Float32Array) {
     var eyeX    = eye[0],    eyeY    = eye[1],    eyeZ    = eye[2],
       upX     = up[0],     upY     = up[1],     upZ     = up[2],
@@ -141,6 +181,14 @@ export class MatIV {
     dest[14] = -(z0 * eyeX + z1 * eyeY + z2 * eyeZ);
     dest[15] = 1;
   }
+  /**
+   * 透視法による射影座標変換行列を生成します。透視法による射影変換では遠近法のような効果が得られます。引数には、視野角(度数法による指定)を整数で、コンテキストのアスペクト比、およびクリッピング領域の前方位置と後方位置を小数点数として引数に渡します。
+   * @param fovy 視野角を表す整数
+   * @param aspect アスペクト比を表す小数点数
+   * @param near クリッピング領域の前方面を表す小数点数
+   * @param far クリッピング領域の後方面を表す小数点数
+   * @param dest 演算結果を格納する行列
+   */
   perspective(fovy: number, aspect: number, near: number, far: number, dest: Float32Array) {
     var t = near * Math.tan(fovy * Math.PI / 360);
     var r = t * aspect;
@@ -162,6 +210,11 @@ export class MatIV {
     dest[14] = -(far * near * 2) / c;
     dest[15] = 0;
   }
+  /**
+   * 行列を転置します。引数には転置したい行列と、その演算結果が代入される行列とを、それぞれ別に指定しなければならない点に注意してください。
+   * @param mat 転置処理の対象となる行列
+   * @param dest 演算結果を格納する行列
+   */
   transpose(mat: Float32Array, dest: Float32Array) {
     dest[0]  = mat[0];  dest[1]  = mat[4];
     dest[2]  = mat[8];  dest[3]  = mat[12];
@@ -172,6 +225,11 @@ export class MatIV {
     dest[12] = mat[3];  dest[13] = mat[7];
     dest[14] = mat[11]; dest[15] = mat[15];
   }
+  /**
+   * 行列を反転します。反転の対象となる行列と演算結果を代入する行列は、transpose メソッドと同様個別に指定する必要がありますので注意してください。
+   * @param mat 反転処理の対象となる行列
+   * @param dest 演算結果を格納する行列
+   */
   inverse(mat: Float32Array, dest: Float32Array) {
     var a = mat[0],  b = mat[1],  c = mat[2],  d = mat[3],
       e = mat[4],  f = mat[5],  g = mat[6],  h = mat[7],
