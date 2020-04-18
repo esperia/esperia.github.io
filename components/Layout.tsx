@@ -8,7 +8,7 @@ type Props = {
 
 const Layout: React.FunctionComponent<Props> = ({
   children,
-  title = 'Spica*',
+  title = 'Spica *',
 }) => (
   <div>
     <Head>
@@ -25,8 +25,6 @@ const Layout: React.FunctionComponent<Props> = ({
     </header>
     {children}
     <footer>
-      <hr />
-      <span>I'm here to stay (Footer)</span>
     </footer>
   </div>
 )
