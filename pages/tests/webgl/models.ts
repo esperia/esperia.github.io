@@ -1,5 +1,32 @@
 
 export class Models {
+  static createTriangle() {
+    const positions: number[] = [
+      0.0, 1.0, 0.0,
+      1.0, 0.0, 0.0,
+      -1.0, 0.0, 0.0,
+      0.0, -1.0, 0.0,
+    ]
+    const colors: number[] = [
+      1.0, 0.0, 0.0, 1.0,
+      0.0, 1.0, 0.0, 1.0,
+      0.0, 0.0, 1.0, 1.0,
+      1.0, 1.0, 1.0, 1.0,
+    ];
+    const indexes: number[] = [
+      0, 1, 2,
+      1, 3, 2,
+    ];
+
+    const vertexPositionStride = 3
+    const vertexColorStride = 4
+
+    return {
+      positions,
+      colors,
+      indexes
+    };
+  }
   /**
    * トーラスを生成する
    * @param row パイプを形成する円をいくつの頂点で表現するのかを指定します。大きな数値を指定すればパイプの断面が円形に近づきますが、逆に小さな数値を指定すればパイプの断面はカクカクになっていきます。

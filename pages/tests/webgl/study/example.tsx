@@ -61,31 +61,20 @@ class W015 {
     const vertexColorAttribLocation = this.gl.getAttribLocation(program, vsAttributes.color)
     const mvpMatrixUniformLocation = this.gl.getUniformLocation(program, vsAttributes.mvpMatrix)
 
-    // const vertexPositionStride = 3
-    // const vertexPosition = [
-    //   0.0, 1.0, 0.0,
-    //   1.0, 0.0, 0.0,
-    //   -1.0, 0.0, 0.0,
-    //   0.0, -1.0, 0.0,
-    // ]
-    // const vertexColorStride = 4
-    // const vertexColor = [
-    //   1.0, 0.0, 0.0, 1.0,
-    //   0.0, 1.0, 0.0, 1.0,
-    //   0.0, 0.0, 1.0, 1.0,
-    //   1.0, 1.0, 1.0, 1.0,
-    // ];
-    // const indexes = [
-    //   0, 1, 2,
-    //   1, 3, 2,
-    // ]
-
-    const torus = Models.createTorus(32, 32, 1.0, 2.0)
-    const vertexPosition = torus.positions
+    // モデルを生成
+    const triangle = Models.createTriangle();
+    const vertexPosition = triangle.positions
     const vertexPositionStride = 3
-    const vertexColor = torus.colors
+    const vertexColor = triangle.colors
     const vertexColorStride = 4
-    const indexes = torus.indexes
+    const indexes = triangle.indexes
+    // // モデルを生成
+    // const torus = Models.createTorus(32, 32, 1.0, 2.0)
+    // const vertexPosition = torus.positions
+    // const vertexPositionStride = 3
+    // const vertexColor = torus.colors
+    // const vertexColorStride = 4
+    // const indexes = torus.indexes
 
     const vertexPositionVbo = this.createVbo(vertexPosition)
     const vertexColorVbo = this.createVbo(vertexColor)
