@@ -76,7 +76,7 @@ class W015 {
     ];
     const indexes = [
       0, 1, 2,
-      1, 2, 3,
+      1, 3, 2,
     ]
 
     const vertexPositionVbo = this.createVbo(vertexPosition)
@@ -109,6 +109,13 @@ class W015 {
     m.lookAt([0.0, 1.0, 3.0], [0, 0, 0], [0, 1, 0], vMatrix)
     m.perspective(90, this.canvasWidth / this.canvasHeight, 0.1, 100, pMatrix)
     m.multiply(pMatrix, vMatrix, mvMatrix)
+
+    // カリング
+    // gl.enable(gl.CULL_FACE)
+
+    // 深度テスト
+    gl.enable(gl.DEPTH_TEST)
+    gl.depthFunc(gl.LEQUAL);
 
     const startTime = Date.now()
     const updateWorld = () => {
