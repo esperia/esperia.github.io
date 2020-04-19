@@ -34,7 +34,8 @@ class W015 {
   private gl: WebGLRenderingContext;
   private canvasWidth: number;
   private canvasHeight: number;
-  positionX = 1.5;
+  positionX: number = 0;
+  positionY: number = 0;
   canLoop = true;
 
   constructor(
@@ -48,11 +49,13 @@ class W015 {
   run() {
     const gl = this.gl;
 
+    // Create Program
     const vShader = this.createShader(this.gl.createShader(this.gl.VERTEX_SHADER)!, vsSource);
     const fShader = this.createShader(this.gl.createShader(this.gl.FRAGMENT_SHADER)!, fsSource);
     const program = this.createProgram(vShader, fShader);
     this.gl.useProgram(program);
 
+    // Get locations
     const vertexPositionAttribLocation = this.gl.getAttribLocation(program, vsAttributes.position)
     const vertexColorAttribLocation = this.gl.getAttribLocation(program, vsAttributes.color)
     const mvpMatrixUniformLocation = this.gl.getUniformLocation(program, vsAttributes.mvpMatrix)
@@ -62,13 +65,19 @@ class W015 {
       0.0, 1.0, 0.0,
       1.0, 0.0, 0.0,
       -1.0, 0.0, 0.0,
+      0.0, -1.0, 0.0,
     ]
     const vertexColorStride = 4
     const vertexColor = [
       1.0, 0.0, 0.0, 1.0,
       0.0, 1.0, 0.0, 1.0,
-      0.0, 0.0, 1.0, 1.0
+      0.0, 0.0, 1.0, 1.0,
+      1.0, 1.0, 1.0, 1.0,
     ];
+    const indexes = [
+      0, 1, 2,
+      1, 2, 3,
+    ]
 
     const vertexPositionVbo = this.createVbo(vertexPosition)
     const vertexColorVbo = this.createVbo(vertexColor)
@@ -81,12 +90,16 @@ class W015 {
     this.gl.enableVertexAttribArray(vertexColorAttribLocation)
     this.gl.vertexAttribPointer(vertexColorAttribLocation, vertexColorStride, this.gl.FLOAT, false, 0, 0)
 
+    const ibo = this.createIbo(indexes)
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, ibo);
+
     const m = new MatIV();
     const mMatrix = m.create()
     const vMatrix = m.create()
     const pMatrix = m.create()
     const mvMatrix = m.create()
     const mvpMatrix = m.create()
+    m.identity(mMatrix)
     m.identity(vMatrix)
     m.identity(pMatrix)
     m.identity(mvMatrix)
@@ -97,26 +110,34 @@ class W015 {
     m.perspective(90, this.canvasWidth / this.canvasHeight, 0.1, 100, pMatrix)
     m.multiply(pMatrix, vMatrix, mvMatrix)
 
+    const startTime = Date.now()
     const updateWorld = () => {
       gl.clearColor(0.0, 0.0, 0.0, 1.0);
       gl.clearDepth(1.0);
       gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-      // 1つめのモデルを描画
+      const currentTime = Date.now()
+      const spentTime = currentTime - startTime
+      const rad = (2 * Math.PI) * (spentTime % 2000 / 2000);
+      
+      // 円運動
+      var x = Math.cos(rad);
+      var y = Math.sin(rad);
+  
+      // モデルを描画
       m.identity(mMatrix)
-      m.translate(mMatrix, [this.positionX, 0.0, 0.0], mMatrix)
+      // m.translate(mMatrix, [x, y + 1.0, 0.0], mMatrix)
+      // m.translate(mMatrix, [this.positionX, 0.0, 0.0], mMatrix)
+      // m.rotate(mMatrix, rad, [0, 1, 0], mMatrix);
+      const radianOfDegree = (2 * Math.PI) / 360
+      const xRadian = radianOfDegree * this.positionX
+      const yRadian = radianOfDegree * this.positionY
+      m.rotate(mMatrix, xRadian, [0, 1, 0], mMatrix);
+      m.rotate(mMatrix, yRadian, [1, 0, 0], mMatrix);
       m.multiply(mvMatrix, mMatrix, mvpMatrix)
-
       this.gl.uniformMatrix4fv(mvpMatrixUniformLocation, false, mvpMatrix)
-      this.gl.drawArrays(this.gl.TRIANGLES, 0, 3)
-
-      // 2つめのモデルを描画
-      m.identity(mMatrix)
-      m.translate(mMatrix, [-(this.positionX), 0.0, 0.0], mMatrix)
-      m.multiply(mvMatrix, mMatrix, mvpMatrix)
-
-      this.gl.uniformMatrix4fv(mvpMatrixUniformLocation, false, mvpMatrix)
-      this.gl.drawArrays(this.gl.TRIANGLES, 0, 3)
+      // this.gl.drawArrays(this.gl.TRIANGLES, 0, 3)
+      this.gl.drawElements(this.gl.TRIANGLES, indexes.length, gl.UNSIGNED_SHORT, 0)
 
       this.gl.flush()
 
@@ -124,7 +145,7 @@ class W015 {
         requestAnimationFrame(() => updateWorld())
       }
     }
-    updateWorld()
+    requestAnimationFrame(() => updateWorld())
   }
 
   createShader(shader: WebGLShader, source: string) {
@@ -157,6 +178,14 @@ class W015 {
     return vbo;
   }
 
+  createIbo(data: number[]) {
+    var ibo = this.gl.createBuffer();
+    this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, ibo)
+    this.gl.bufferData(this.gl.ELEMENT_ARRAY_BUFFER, new Int16Array(data), this.gl.STATIC_DRAW)
+    this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, null)
+    return ibo;
+  }
+
   destroy() {
     this.canLoop = false
   }
@@ -165,7 +194,8 @@ class W015 {
 
 const Example: React.FunctionComponent<{}> = (props) => {
   const [glContainer, setGlContainer] = useState<W015 | undefined>(undefined);
-  const [x, setX] = useState<number>(1.5);
+  const [x, setX] = useState<number>(0);
+  const [y, setY] = useState<number>(0);
 
   return (
     <div>
@@ -173,6 +203,8 @@ const Example: React.FunctionComponent<{}> = (props) => {
       <CanvasComponent onMountedCanvas={canvasEl => {
         const glContainer = new W015(canvasEl)
         setGlContainer(glContainer)
+        glContainer.positionX = x
+        glContainer.positionY = y
         glContainer.run();
       }} onUnmountedCanvas={() => {
         if (glContainer) {
@@ -181,11 +213,19 @@ const Example: React.FunctionComponent<{}> = (props) => {
         setGlContainer(undefined)
       }} />
       {glContainer ? <div>
-        <label>position x: <input type="range" value={x} min="0.0" max="3.0" step="0.1" onChange={e => {
-          glContainer.positionX = parseFloat(e.target.value)
-          console.log(glContainer.positionX)
-          setX(glContainer.positionX)
-        }} /></label>
+        <div>
+          <label>position x: <input type="range" value={x} min="0.0" max="360.0" step="0.1" onChange={e => {
+            glContainer.positionX = parseFloat(e.target.value)
+            console.log(glContainer.positionX)
+            setX(glContainer.positionX)
+          }} /> <span>{glContainer.positionX}</span></label>
+        </div>
+        <div>
+          <label>position y: <input type="range" value={y} min="0.0" max="360.0" step="0.1" onChange={e => {
+            glContainer.positionY = parseFloat(e.target.value)
+            setY(glContainer.positionY)
+          }} /> <span>{glContainer.positionY}</span></label>
+        </div>
       </div> : null}
     </div>
   )
