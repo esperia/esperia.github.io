@@ -1,7 +1,14 @@
 
 export class Models {
+  /**
+   * トーラスを生成する
+   * @param row パイプを形成する円をいくつの頂点で表現するのかを指定します。大きな数値を指定すればパイプの断面が円形に近づきますが、逆に小さな数値を指定すればパイプの断面はカクカクになっていきます。
+   * @param column パイプをどれくらい分割するのかを指定します。この数値を大きくすると、トーラスは滑らかな輪を形成するようになり、小さな数値を指定すればカクカクの輪になります。
+   * @param irad 生成されるパイプそのものの半径です。
+   * @param orad 原点からパイプの中心までの距離になります。
+   */
   static createTorus(row: number, column: number, irad: number, orad: number) {
-    const positions = new Array(), colors = new Array(), indexes = new Array();
+    const positions = [], colors = [], indexes = [];
     for (let i = 0; i <= row; i++) {
       const r = Math.PI * 2 / row * i;
       const rr = Math.cos(r);
@@ -12,7 +19,7 @@ export class Models {
         const ty = ry * irad;
         const tz = (rr * irad + orad) * Math.sin(tr);
         positions.push(tx, ty, tz);
-        const tc = this.hsva(360 / column * ii, 1, 1, 1)
+        const tc = this.getRgbColorFromHsva(360 / column * ii, 1, 1, 1)
         colors.push(tc[0], tc[1], tc[2], tc[3]);
       }
     }
@@ -30,31 +37,33 @@ export class Models {
     };
   }
   
-  private static hsva(h: number, s: number, v: number, a: number): number[] {
-    if (s > 1) {
-      throw new Error(`s must be less than 1`)
+  /**
+   * HSVAからRGBカラーへ変換する
+   * @param h 色相
+   * @param s 彩度
+   * @param v 明度
+   * @param a 透明度
+   */
+  private static getRgbColorFromHsva(h: number, s: number, v: number, a: number): number[] {
+    if (s > 1) throw new Error(`s must be less than 1`)
+    if (v > 1) throw new Error(`v must be less than 1`)
+    if (a > 1) throw new Error(`a must be less than 1`)
+
+    const th = h % 360;
+    const i = Math.floor(th / 60);
+    const f = th / 60 - i;
+    const m = v * (1 - s);
+    const n = v * (1 - s * f);
+    const k = v * (1 - s * (1 - f));
+    const color = [];
+    if (s === 0) {
+      color.push(v, v, v, a);
+    } else {
+      const r = [v, n, m, m, k, v];
+      const g = [k, v, v, n, m, m];
+      const b = [m, m, k, v, v, n];
+      color.push(r[i], g[i], b[i], a);
     }
-    if (v > 1) {
-      throw new Error(`v must be less than 1`)
-    }
-    if (a > 1) {
-      throw new Error(`a must be less than 1`)
-    }
-    var th = h % 360;
-    var i = Math.floor(th / 60);
-    var f = th / 60 - i;
-    var m = v * (1 - s);
-    var n = v * (1 - s * f);
-    var k = v * (1 - s * (1 - f));
-    const color = new Array();
-    // if (!s > 0 && !s < 0) {
-    //   color.push(v, v, v, a);
-    // } else {
-    var r = new Array(v, n, m, m, k, v);
-    var g = new Array(k, v, v, n, m, m);
-    var b = new Array(m, m, k, v, v, n);
-    color.push(r[i], g[i], b[i], a);
-    // }
     return color;
   }
 }
