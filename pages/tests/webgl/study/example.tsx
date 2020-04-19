@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { MatIV } from '../../../../libs/minMatrix';
 import { CanvasComponent } from '../components';
+import { Models } from '../models';
 
 const vsAttributes = {
   position: 'position',
@@ -60,24 +61,31 @@ class W015 {
     const vertexColorAttribLocation = this.gl.getAttribLocation(program, vsAttributes.color)
     const mvpMatrixUniformLocation = this.gl.getUniformLocation(program, vsAttributes.mvpMatrix)
 
+    // const vertexPositionStride = 3
+    // const vertexPosition = [
+    //   0.0, 1.0, 0.0,
+    //   1.0, 0.0, 0.0,
+    //   -1.0, 0.0, 0.0,
+    //   0.0, -1.0, 0.0,
+    // ]
+    // const vertexColorStride = 4
+    // const vertexColor = [
+    //   1.0, 0.0, 0.0, 1.0,
+    //   0.0, 1.0, 0.0, 1.0,
+    //   0.0, 0.0, 1.0, 1.0,
+    //   1.0, 1.0, 1.0, 1.0,
+    // ];
+    // const indexes = [
+    //   0, 1, 2,
+    //   1, 3, 2,
+    // ]
+
+    const torus = Models.createTorus(32, 32, 1.0, 2.0)
+    const vertexPosition = torus.positions
     const vertexPositionStride = 3
-    const vertexPosition = [
-      0.0, 1.0, 0.0,
-      1.0, 0.0, 0.0,
-      -1.0, 0.0, 0.0,
-      0.0, -1.0, 0.0,
-    ]
+    const vertexColor = torus.colors
     const vertexColorStride = 4
-    const vertexColor = [
-      1.0, 0.0, 0.0, 1.0,
-      0.0, 1.0, 0.0, 1.0,
-      0.0, 0.0, 1.0, 1.0,
-      1.0, 1.0, 1.0, 1.0,
-    ];
-    const indexes = [
-      0, 1, 2,
-      1, 3, 2,
-    ]
+    const indexes = torus.indexes
 
     const vertexPositionVbo = this.createVbo(vertexPosition)
     const vertexColorVbo = this.createVbo(vertexColor)
@@ -106,7 +114,7 @@ class W015 {
     m.identity(mvpMatrix)
 
     // ビュー行列とプロジェクション行列を計算しておく
-    m.lookAt([0.0, 1.0, 3.0], [0, 0, 0], [0, 1, 0], vMatrix)
+    m.lookAt([0.0, 1.0, 6.0], [0, 0, 0], [0, 1, 0], vMatrix)
     m.perspective(90, this.canvasWidth / this.canvasHeight, 0.1, 100, pMatrix)
     m.multiply(pMatrix, vMatrix, mvMatrix)
 
