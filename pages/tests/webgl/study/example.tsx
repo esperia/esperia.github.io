@@ -62,32 +62,24 @@ class W015 {
     const mvpMatrixUniformLocation = this.gl.getUniformLocation(program, vsAttributes.mvpMatrix)
 
     // モデルを生成
-    const triangle = Models.createTriangle();
-    const vertexPosition = triangle.positions
+    const model = Models.createBox();
+    // const model = Models.createTriangle();
+    // const model = Models.createTorus(32, 32, 1.0, 2.0)
+
+    const vertexPositionVbo = this.createVbo(model.positions)
+    const vertexColorVbo = this.createVbo(model.colors)
+
     const vertexPositionStride = 3
-    const vertexColor = triangle.colors
-    const vertexColorStride = 4
-    const indexes = triangle.indexes
-    // // モデルを生成
-    // const torus = Models.createTorus(32, 32, 1.0, 2.0)
-    // const vertexPosition = torus.positions
-    // const vertexPositionStride = 3
-    // const vertexColor = torus.colors
-    // const vertexColorStride = 4
-    // const indexes = torus.indexes
-
-    const vertexPositionVbo = this.createVbo(vertexPosition)
-    const vertexColorVbo = this.createVbo(vertexColor)
-
     this.gl.bindBuffer(this.gl.ARRAY_BUFFER, vertexPositionVbo)
     this.gl.enableVertexAttribArray(vertexPositionAttribLocation)
     this.gl.vertexAttribPointer(vertexPositionAttribLocation, vertexPositionStride, this.gl.FLOAT, false, 0, 0)
 
+    const vertexColorStride = 4
     this.gl.bindBuffer(this.gl.ARRAY_BUFFER, vertexColorVbo)
     this.gl.enableVertexAttribArray(vertexColorAttribLocation)
     this.gl.vertexAttribPointer(vertexColorAttribLocation, vertexColorStride, this.gl.FLOAT, false, 0, 0)
 
-    const ibo = this.createIbo(indexes)
+    const ibo = this.createIbo(model.indexes)
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, ibo);
 
     const m = new MatIV();
@@ -141,7 +133,7 @@ class W015 {
       m.multiply(mvMatrix, mMatrix, mvpMatrix)
       this.gl.uniformMatrix4fv(mvpMatrixUniformLocation, false, mvpMatrix)
       // this.gl.drawArrays(this.gl.TRIANGLES, 0, 3)
-      this.gl.drawElements(this.gl.TRIANGLES, indexes.length, gl.UNSIGNED_SHORT, 0)
+      this.gl.drawElements(this.gl.TRIANGLES, model.indexes.length, gl.UNSIGNED_SHORT, 0)
 
       this.gl.flush()
 
@@ -178,15 +170,16 @@ class W015 {
     var vbo = this.gl.createBuffer();
     this.gl.bindBuffer(this.gl.ARRAY_BUFFER, vbo)
     this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(data), this.gl.STATIC_DRAW)
-    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, null)
+    // this.gl.bindBuffer(this.gl.ARRAY_BUFFER, null)
     return vbo;
   }
 
   createIbo(data: number[]) {
     var ibo = this.gl.createBuffer();
     this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, ibo)
-    this.gl.bufferData(this.gl.ELEMENT_ARRAY_BUFFER, new Int16Array(data), this.gl.STATIC_DRAW)
-    this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, null)
+    this.gl.bufferData(this.gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(data), this.gl.STATIC_DRAW)
+    // this.gl.bufferData(this.gl.ELEMENT_ARRAY_BUFFER, new Int16Array(data), this.gl.STATIC_DRAW)
+    // this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, null)
     return ibo;
   }
 
