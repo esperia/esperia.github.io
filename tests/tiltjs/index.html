@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link href="https://fonts.googleapis.com/earlyaccess/roundedmplus1c.css" rel="stylesheet" />
+    <style>
+html, body {
+  height: 100%;
+  padding: 0;
+  margin: 0;
+}
+    .main {
+      display: flex;
+      width: 100%;
+      height: 100%;
+      justify-content: center;
+      align-items: center;
+    }
+    .js-tilt {
+      background-color: red;
+      width: 80vw;
+      height: 70vh;
+      background-image: linear-gradient(135deg, #ff00ba 0%, #fae713 100%);
+      transform-style: preserve-3d;
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .js-tilt .contents {
+      color: #fff;
+      font-size: 6vw;
+
+      font-family: "Rounded Mplus 1c";
+      transform: translateZ(100px);
+        text-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
+    }
+    </style>
+  </head>
+  <body>
+    <div class="main">
+      <div class="js-tilt" data-tilt>
+        <span class="contents"></span>
+      </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" ></script> <!-- Load jQuery first -->
+    <script src="https://unpkg.com/tilt.js@1.1.21/dest/tilt.jquery.min.js"></script> <!-- Load Tilt.js library -->
+    <script src="./js/URI.js"></script> <!-- Load Tilt.js library -->
+    <script>
+    /**
+     * URI.jsを使って、テキストを取得
+     */
+    function getTextFromQuery(name) {
+      var qs = URI(location.href).query(true);
+      var text = qs[name];
+      if (!text) {
+        text = 'Hello!!';
+      }
+      return text;
+    }
+    function run() {
+      // tilt.jsライブラリの設定
+      $('.js-tilt').tilt({
+        glare: true,
+        maxGlare: .8
+      });
+
+      // URLに指定したテキストを、HTML内の <span class="contents>ここ</span> に設定
+      $('.contents').text(getTextFromQuery('q'));
+    }
+
+    $(function() {
+      // run()メソッドを走らせる
+      run();
+    });
+    </script>
+  </body>
+</html>
