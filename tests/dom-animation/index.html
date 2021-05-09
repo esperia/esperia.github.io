@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <title>マウス追従</title>
+  </head>
+
+  <body onload="onLoaded()">
+    <div id="mouse">マウス</div>
+    <div id="my_element">テスト</div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script>
+      var $target;
+      var mouseX = 0;
+      var mouseY = 0;
+
+      function onLoaded() {
+        $target = $('#my_element');
+
+        // マウス座標取得
+        // http://api.jquery.com/event.pagex/
+        $(window).on('mousemove', function(e) {
+          mouseX = e.pageX;
+          mouseY = e.pageY;
+          $("#mouse").text("pageX: " + e.pageX + ", pageY: " + e.pageY);
+        });
+        anim();
+      }
+
+      // アニメーション用無限ループ
+      function anim() {
+        // マウスの座標を設定
+        // https://api.jquery.com/offset/#offset2
+        $target.offset({
+          left: mouseX,
+          top: mouseY,
+        });
+
+        // 無限ループ用(20ms毎に処理を繰り返す)
+        requestAnimationFrame(function() {
+          anim();
+        }, 20);
+      }
+    </script>
+  </body>
+
+</html>
