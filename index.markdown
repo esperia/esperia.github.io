@@ -3,8 +3,12 @@
 # To modify the layout, see https://jekyllrb.com/docs/themes/#overriding-theme-defaults
 
 layout: page
-title: 勉強用サンプル集
+title: Index
 ---
+
+## Blogs
+
+* [ピアノのメモ](/blogs/piano)
 
 ## JavaScript
 
