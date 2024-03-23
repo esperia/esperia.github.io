@@ -1,6 +1,10 @@
+---
+# Feel free to add content and custom Front Matter to this file.
+# To modify the layout, see https://jekyllrb.com/docs/themes/#overriding-theme-defaults
 
-
-# プライバシーポリシー
+layout: page
+title: プライバシーポリシー
+---
 
 第三者に個人を特定できる情報を提供することはありません。
 個人情報の管理には最新の注意を払い、以下に掲げた通りに扱います。
